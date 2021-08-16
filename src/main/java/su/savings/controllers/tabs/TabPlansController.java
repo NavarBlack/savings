@@ -19,9 +19,11 @@ import su.savings.helpers.Utils;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class TabPlansController implements Initializable, NCell.ChangeForm {
@@ -139,7 +141,9 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     }
 
     public void updatePlan(Plan plans) {
-        repository.upDatePlan(plans);
+    plans.getPeriods().stream().map(p -> p.setFinalSing(!p.getFinalSing())).collect(Collectors.toCollection(ArrayList::new));
+    mainController.getTabPeriodsController().getFxListViewPeriods().getSelectionModel().selectFirst();
+//        repository.upDatePlan(plans);
     }
 
     private Boolean validForm() {

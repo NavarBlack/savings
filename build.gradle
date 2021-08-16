@@ -24,6 +24,7 @@ dependencies {
     implementation "javax.enterprise:cdi-api:2.0.SP1"
     implementation "javax.validation:validation-api:2.0.1.Final"
     implementation "javax.ejb:ejb-api:3.0"
+    implementation "de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }

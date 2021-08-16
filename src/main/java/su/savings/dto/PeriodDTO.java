@@ -17,6 +17,7 @@ public class PeriodDTO {
     protected Long planDays;
     protected ArrayList<Operation> operations = new ArrayList<>();
     protected Long planId;
+    protected Boolean finalSing = false;
 
     public Long getId() {
         return id;
@@ -108,6 +109,15 @@ public class PeriodDTO {
         return this;
     }
 
+    public Boolean getFinalSing() {
+        return finalSing;
+    }
+
+    public PeriodDTO setFinalSing(Boolean finalSing) {
+        this.finalSing = finalSing;
+        return this;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -121,6 +131,7 @@ public class PeriodDTO {
                 .add("planDays", planDays)
                 .add("operations", operations)
                 .add("planId", planId)
+                .add("finalSing", finalSing)
                 .toString();
     }
 }

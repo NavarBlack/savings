@@ -160,7 +160,6 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
         ListView<Plan> PlanListView = mainController.getTabPlansController().getFxAllPlans();
         Plan oldPlan = PlanListView.getItems().get(PlanListView.getItems().indexOf(fxCurrentPlan.getValue()));
         Period oldPeriod = oldPlan.getPeriods().stream().filter(op -> op.getStartPeriod() == newPeriod.getStartPeriod()).findFirst().orElse(null);
-//        oldPlan.getPeriods().set(oldPlan.getPeriods().indexOf(oldPeriod), newPeriod);
         Plan newPlan = updatePlanOnForm(oldPlan, oldPeriod, newPeriod);
         replacementObj(PlanListView, oldPlan, newPlan);
         replacementObj(fxCurrentPlan, oldPlan, newPlan);
@@ -192,7 +191,10 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
 
     public void onTest(){
         Period p = fxListViewPeriods.getSelectionModel().getSelectedItem();
-        System.out.println(p.toString());
+        System.out.println(p.countOperation());
+    }
 
+    public ListView<Period> getFxListViewPeriods() {
+        return fxListViewPeriods;
     }
 }

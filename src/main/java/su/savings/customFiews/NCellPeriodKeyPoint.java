@@ -1,5 +1,6 @@
 package su.savings.customFiews;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -18,6 +19,7 @@ public class NCellPeriodKeyPoint extends ListCell<Period> {
     @FXML private Text startSum;
     @FXML private Text endSum;
     @FXML private Text expOnDey;
+    @FXML private FontAwesomeIconView finalSing;
     private ChangeForm changeForm;
 
     public NCellPeriodKeyPoint(ChangeForm changeForm){
@@ -57,6 +59,7 @@ public class NCellPeriodKeyPoint extends ListCell<Period> {
             startSum.setText(item.getStartSum().toString());
             endSum.setText(item.getEndSum().toString());
             expOnDey.setText(item.getExpOnDey().toString());
+            finalSing.setVisible(item.getFinalSing());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

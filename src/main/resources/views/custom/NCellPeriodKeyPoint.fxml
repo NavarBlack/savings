@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListCell?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -17,6 +18,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
@@ -36,6 +38,7 @@
             <Text fx:id="startSum" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Text fx:id="endSum" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <Text fx:id="expOnDey" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <FontAwesomeIconView fx:id="finalSing" fill="#a89494" glyphName="LOCK" visible="false" GridPane.columnIndex="6" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </graphic>

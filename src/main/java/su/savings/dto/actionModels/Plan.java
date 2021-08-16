@@ -19,8 +19,9 @@ public class Plan extends PlansDTO {
         }
         remSum = remSum - expSum + incSum ;
         Long totalRem = remSum - totalExpOnDey;
+        Long expOnDay = (remSum/planDays)/100*100;
 
-        return Map.of("remSum", remSum, "expSum",expSum,"incSum", incSum, "totalRem", totalRem);
+        return Map.of("remSum", remSum, "expSum",expSum,"incSum", incSum, "totalRem", totalRem, "expOnDay", expOnDay);
     }
 
     public Long countPlanDays(){
@@ -31,5 +32,6 @@ public class Plan extends PlansDTO {
     public Long preliminaryExpOnDey (){
         return (startSum / planDays)/100*100;
     }
+
 
 }

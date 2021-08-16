@@ -113,6 +113,7 @@
                   <Label text="Общаяи информация по плату" GridPane.columnSpan="2" />
                </children>
             </GridPane>
+            <Button mnemonicParsing="false" onAction="#onTest" text="Button" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

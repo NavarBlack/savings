@@ -4,11 +4,12 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import su.savings.actionModels.Plan;
 import su.savings.dto.PlansDTO;
 
 import java.io.IOException;
 
-public class NCell extends ListCell<PlansDTO> {
+public class NCell extends ListCell<Plan> {
     @FXML
     private Label planeName;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -26,7 +27,8 @@ public class NCell extends ListCell<PlansDTO> {
     }
 
     public interface ChangeForm{
-        void onChangeForm(PlansDTO plansDTO);
+        void onChangeForm(Plan plan);
+        void onDeletePlan(Plan plan);
     }
 
     private void addContextMenu() {
@@ -36,7 +38,10 @@ public class NCell extends ListCell<PlansDTO> {
                     this.setContextMenu(null);
                 } else {
                     deleteItem.textProperty().bind(Bindings.format("Удалить \"%s\"", this.itemProperty().getValue().getPlaneName()));
-                    deleteItem.setOnAction(event -> this.listViewProperty().getValue().getItems().remove(this.getItem()));
+                    deleteItem.setOnAction(event -> {
+                        changeForm.onDeletePlan(this.getItem());
+                        this.listViewProperty().getValue().getItems().remove(this.getItem());
+                    });
                     contextMenu.getItems().setAll(deleteItem);
                     this.setContextMenu(contextMenu);
                 }
@@ -65,7 +70,7 @@ public class NCell extends ListCell<PlansDTO> {
 
 
     @Override
-    protected void updateItem(PlansDTO item, boolean empty) {
+    protected void updateItem(Plan item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setText(null);

@@ -1,8 +1,8 @@
 package su.savings.db;
 
-import su.savings.dto.OperationDTO;
-import su.savings.dto.PeriodDTO;
-import su.savings.dto.PlansDTO;
+import su.savings.actionModels.Operation;
+import su.savings.actionModels.Period;
+import su.savings.actionModels.Plan;
 import su.savings.helpers.Converter;
 
 import java.sql.ResultSet;
@@ -23,17 +23,17 @@ public class RepositoryImpl implements Repository {
 
 
     @Override
-    public List<PlansDTO> getAllPlans() {
-        List<PlansDTO> plansDTOList = database.executeSelectQuery(
+    public List<Plan> getAllPlans() {
+        List<Plan> plansDTOList = database.executeSelectQuery(
                 "select *, (select group_concat(KEY_POINTS.DATE_POINT) from DATA.KEY_POINTS where PLAN_ID = DATA.ALL_PLANS.ID) as KEY_POINTS from DATA.ALL_PLANS order by ID desc;",
                 this::allPlansMapper).collect(Collectors.toList());
         if (plansDTOList.isEmpty()) return new ArrayList<>();
         else return plansDTOList;
     }
 
-    private PlansDTO allPlansMapper(ResultSet rs) {
+    private Plan allPlansMapper(ResultSet rs) {
         try {
-            PlansDTO plansDTO = new PlansDTO();
+            Plan plansDTO = new Plan();
             plansDTO.setId(rs.getLong("id"))
                     .setPlaneName(rs.getString("PLAN_NAME"))
                     .setStartPlane(Instant.ofEpochMilli(rs.getDate("START_PLAN").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
@@ -50,8 +50,8 @@ public class RepositoryImpl implements Repository {
         }
     }
 
-    private List<PeriodDTO> getPeriodOnPlan(Long idPlan) {
-        List<PeriodDTO> listPeriod = database.executeSelectQuery(
+    private List<Period> getPeriodOnPlan(Long idPlan) {
+        List<Period> listPeriod = database.executeSelectQuery(
                 "select * from ALL_PERIODS where PLAN_ID = ?;",
                 this::periodMapper,
                 QueryParam.longParam(idPlan)).collect(Collectors.toList());
@@ -59,9 +59,9 @@ public class RepositoryImpl implements Repository {
         else return listPeriod;
     }
 
-    private PeriodDTO periodMapper(ResultSet rs) {
+    private Period periodMapper(ResultSet rs) {
         try {
-            PeriodDTO period = new PeriodDTO();
+            Period period = new Period();
             period.setId(rs.getLong("id"));
             period.setStartPeriod(Instant.ofEpochMilli(rs.getDate("START_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
             period.setEndPeriod(Instant.ofEpochMilli(rs.getDate("END_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
@@ -78,8 +78,8 @@ public class RepositoryImpl implements Repository {
         }
     }
 
-    private List<OperationDTO> getOperation(Long idPeriod) {
-        List<OperationDTO> listOperation = database.executeSelectQuery(
+    private List<Operation> getOperation(Long idPeriod) {
+        List<Operation> listOperation = database.executeSelectQuery(
                 "select * from OPERATIONS where PERIOD_ID = ?;",
                 this::operationMapper,
                 QueryParam.longParam(idPeriod)).collect(Collectors.toList());
@@ -87,9 +87,9 @@ public class RepositoryImpl implements Repository {
         else return listOperation;
     }
 
-    private OperationDTO operationMapper(ResultSet rs) {
+    private Operation operationMapper(ResultSet rs) {
         try {
-            OperationDTO operation = new OperationDTO();
+            Operation operation = new Operation();
             operation.setId(rs.getLong("ID"));
             operation.setName(rs.getString("OPERATION_NAME"));
             operation.setSum(rs.getLong("SUM"));
@@ -103,7 +103,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public Long savePlan(PlansDTO plansDTO) {
+    public Long savePlan(Plan plansDTO) {
         try {
             Long id = database.executeUpdate("""
                             insert into ALL_PLANS (PLAN_NAME, START_PLAN, END_PLAN, START_SUM, EXP_ON_DEY, PLAN_DAYS) values ( ?,?,?,?,?,? );
@@ -140,7 +140,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void savePeriodPlan(PeriodDTO period, Long idPlan, Long expOnDey) {
+    public void savePeriodPlan(Period period, Long idPlan, Long expOnDey) {
         try {
             Long idPeriod = database.executeUpdate("""
                             insert into ALL_PERIODS (
@@ -168,7 +168,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void savaOperationPeriod(OperationDTO operation, Long idPeriod) {
+    public void savaOperationPeriod(Operation operation, Long idPeriod) {
         try {
             database.executeUpdate("""
                             insert into OPERATIONS (OPERATION_NAME, SUM, PERIOD_ID, EXP_TAPE) VALUES(?,?,?,?)
@@ -184,7 +184,16 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void upDatePlan(PlansDTO plan) {
+    public void deletePlan(Plan plan){
+        try {
+            database.executeUpdate("delete from ALL_PLANS where ID = ?; ", longParam(plan.getId()));
+        } catch (SQLException ex) {
+            ex.forEach(System.out::println);
+        }
+    }
+
+    @Override
+    public void upDatePlan(Plan plan) {
         try {
             Long idPlan = database.executeUpdate("""
                             update ALL_PLANS
@@ -226,7 +235,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void upDatePeriodPlan(PeriodDTO period, Long idPlan, Long expOnDey) {
+    public void upDatePeriodPlan(Period period, Long idPlan, Long expOnDey) {
         try {
             Long periodId = database.executeUpdate("""
                             insert into ALL_PERIODS (
@@ -254,7 +263,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void upDateOperationPeriod(OperationDTO operation, Long idPeriod) {
+    public void upDateOperationPeriod(Operation operation, Long idPeriod) {
         try {
             database.executeUpdate("""
                             insert into OPERATIONS (OPERATION_NAME, SUM, PERIOD_ID, EXP_TYPE) VALUES(?,?,?,?)

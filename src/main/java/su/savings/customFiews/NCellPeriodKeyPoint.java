@@ -5,12 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.text.Text;
-import su.savings.dto.PeriodDTO;
+import su.savings.actionModels.Period;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-public class NCellPeriodKeyPoint extends ListCell<PeriodDTO> {
+public class NCellPeriodKeyPoint extends ListCell<Period> {
 
     @FXML private Text start;
     @FXML private Text end;
@@ -29,7 +29,7 @@ public class NCellPeriodKeyPoint extends ListCell<PeriodDTO> {
     }
 
     public interface ChangeForm{
-        void onChangeForm(PeriodDTO plansDTO);
+        void onChangeForm(Period plansDTO);
     }
 
     private void loadFXML() {
@@ -44,7 +44,7 @@ public class NCellPeriodKeyPoint extends ListCell<PeriodDTO> {
     }
 
     @Override
-    protected void updateItem(PeriodDTO item, boolean empty) {
+    protected void updateItem(Period item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setText(null);

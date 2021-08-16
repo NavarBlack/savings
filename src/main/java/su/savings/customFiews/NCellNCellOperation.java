@@ -4,13 +4,11 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import su.savings.dto.OperationDTO;
-import su.savings.dto.PlansDTO;
-import su.savings.helpers.Utils;
+import su.savings.actionModels.Operation;
 
 import java.io.IOException;
 
-public class NCellNCellOperation extends ListCell<OperationDTO> {
+public class NCellNCellOperation extends ListCell<Operation> {
     @FXML
     private Label name;
     @FXML
@@ -32,7 +30,7 @@ public class NCellNCellOperation extends ListCell<OperationDTO> {
     }
 
     public interface ChangeForm{
-        void onChangeForm(OperationDTO plansDTO);
+        void onChangeForm(Operation plansDTO);
     }
 
     private void addContextMenu() {
@@ -71,7 +69,7 @@ public class NCellNCellOperation extends ListCell<OperationDTO> {
 
 
     @Override
-    protected void updateItem(OperationDTO item, boolean empty) {
+    protected void updateItem(Operation item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setText(null);

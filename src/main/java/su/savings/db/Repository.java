@@ -2,9 +2,10 @@ package su.savings.db;
 
 
 import com.google.inject.ImplementedBy;
-import su.savings.dto.OperationDTO;
-import su.savings.dto.PeriodDTO;
-import su.savings.dto.PlansDTO;
+import su.savings.actionModels.Operation;
+import su.savings.actionModels.Plan;
+import su.savings.actionModels.Period;
+
 
 
 import java.time.LocalDate;
@@ -13,21 +14,23 @@ import java.util.List;
 @ImplementedBy(RepositoryImpl.class)
 public interface Repository {
 
-    List<PlansDTO> getAllPlans();
+    List<Plan> getAllPlans();
 
-    Long savePlan(PlansDTO plansDTO);
+    Long savePlan(Plan plan);
 
     void savePlanKeyPoint(LocalDate localDate, Long idPlan);
 
-    void savePeriodPlan(PeriodDTO period, Long idPlan, Long expOnDey);
+    void savePeriodPlan(Period period, Long idPlan, Long expOnDey);
 
-    void savaOperationPeriod(OperationDTO operation, Long idPeriod);
+    void savaOperationPeriod(Operation operation, Long idPeriod);
 
-    void upDatePlan(PlansDTO plan);
+    void upDatePlan(Plan plan);
 
     void upDatePlanKeyPoint(LocalDate localDate, Long idPlan);
 
-    void upDatePeriodPlan(PeriodDTO period, Long idPlan, Long expOnDey);
+    void upDatePeriodPlan(Period period, Long idPlan, Long expOnDey);
 
-    void upDateOperationPeriod(OperationDTO operation, Long idPeriod);
+    void upDateOperationPeriod(Operation operation, Long idPeriod);
+
+    void deletePlan(Plan plan);
 }

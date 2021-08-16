@@ -10,16 +10,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import su.nevar.controls.NumberField;
+import su.savings.actionModels.Plan;
 import su.savings.controllers.MainController;
 import su.savings.customFiews.NCell;
 import su.savings.db.RepositoryImpl;
-import su.savings.dto.PlansDTO;
 import su.savings.helpers.Utils;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -32,7 +33,7 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
         this.mainController = mainController;
     }
 
-    private PlansDTO plans = new PlansDTO();
+    private Plan plans = new Plan();
     private final RepositoryImpl repository = new RepositoryImpl();
 
     @FXML
@@ -52,16 +53,16 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     @FXML
     private DatePicker fxKeyPointsDate;
     @FXML
-    private ListView<PlansDTO> fxAllPlans;
+    private ListView<Plan> fxAllPlans;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        List<PlansDTO> plansDTOList = repository.getAllPlans();
-        if (!plansDTOList.isEmpty()) {
-            plans = plansDTOList.get(0);
-            fxAllPlans.getItems().setAll(plansDTOList);
+        List<Plan> planList = repository.getAllPlans();
+        if (!planList.isEmpty()) {
+            plans = planList.get(0);
+            fxAllPlans.getItems().setAll(planList);
         }
         fxStartSum.focusedProperty().addListener((observable, oldValue, newValue) ->
                 {
@@ -82,12 +83,12 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     }
 
     public Long countExpOnDey() {
-        Long res = Long.parseLong(fxStartSum.getText()) / ChronoUnit.DAYS.between(fxStartPlane.getValue(), fxEndPlane.getValue());
+        Long res = (Long.parseLong(fxStartSum.getText()) / ChronoUnit.DAYS.between(fxStartPlane.getValue(), fxEndPlane.getValue())/100*100);
         fxExpPlanOnDays.setText(res.toString());
         return res;
     }
 
-    private void setDataForm(PlansDTO plans) {
+    private void setDataForm(Plan plans) {
         fxStartSum.setText(plans.getStartSum().toString());
         fxPlaneName.setText(plans.getPlaneName());
         fxStartPlane.setValue(plans.getStartPlane());
@@ -131,27 +132,25 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     public void savePlan() {
         if (validForm()) {
             if (checkContainsPlan()) {
-                PlansDTO newPlan = Utils.filPlan(new PlansDTO(), this);
-                newPlan.setId(repository.savePlan(Utils.filPlan(new PlansDTO(), this)));
-                newPlan.setExpPlanOnDays(700L);
+                Plan newPlan = Utils.filPlan(new Plan(), this);
+                newPlan.setId(repository.savePlan(Utils.filPlan(new Plan(), this)));
                 fxAllPlans.getItems().add(newPlan);
             } else {
-                PlansDTO oldPlan = fxAllPlans
+                Plan oldPlan = fxAllPlans
                         .getItems()
                         .stream()
-                        .filter(plansDTO -> plansDTO.getPlaneName().equals(fxPlaneName.getText()))
+                        .filter(Plan -> Plan.getPlaneName().equals(fxPlaneName.getText()))
                         .findFirst().orElse(null);
                 assert oldPlan != null;
-                PlansDTO newPlan = Utils.filPlan(oldPlan, this);
+                Plan newPlan = Utils.filPlan(oldPlan, this);
                 fxAllPlans.getItems().set(fxAllPlans.getItems().indexOf(oldPlan), newPlan);
-                System.out.println(newPlan.toStringMy());
                 updatePlan(newPlan);
 
             }
         }
     }
 
-    public void updatePlan(PlansDTO plans) {
+    public void updatePlan(Plan plans) {
         repository.upDatePlan(plans);
     }
 
@@ -174,15 +173,20 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     }
 
     @Override
-    public void onChangeForm(PlansDTO plans) {
+    public void onChangeForm(Plan plans) {
         setDataForm(plans);
+    }
+
+    @Override
+    public void onDeletePlan(Plan plan){
+        if(!Objects.isNull(plan))repository.deletePlan(plan);
     }
 
     public MainController getMainController() {
         return mainController;
     }
 
-    public PlansDTO getPlans() {
+    public Plan getPlans() {
         return plans;
     }
 
@@ -218,7 +222,7 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
         return fxKeyPointsDate;
     }
 
-    public ListView<PlansDTO> getFxAllPlans() {
+    public ListView<Plan> getFxAllPlans() {
         return fxAllPlans;
     }
 }

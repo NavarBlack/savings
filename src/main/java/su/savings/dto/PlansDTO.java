@@ -1,33 +1,20 @@
 package su.savings.dto;
 
+import su.savings.actionModels.Period;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Map;
-
 public class PlansDTO {
-    private Long id = null;
-    private String planeName = "План от "+LocalDate.now();
-    private LocalDate startPlane = LocalDate.now();
-    private LocalDate endPlane =  LocalDate.now().plusMonths(1);
-    private Long startSum = 0L;
-    private Long expPlanOnDays = 0L;
-    private Integer planDays = Math.toIntExact(ChronoUnit.DAYS.between(startPlane, endPlane));
-    private ArrayList<LocalDate> keyPoints = new ArrayList<>();
-    private ArrayList<PeriodDTO> periods = new ArrayList<>();
-
-    public Map<String, Long> getStatistic(){
-        Long remSum = startSum;
-        Long expSum = 0L;
-        Long incSum = 0L;
-        for (PeriodDTO per : periods){
-            Map<String,Long> calcPer = per.getStatistic();
-            expSum += calcPer.get("expSum");
-            incSum += calcPer.get("incSum");
-        }
-        remSum = remSum - expSum + incSum;
-        return Map.of("remSum", remSum, "expSum",expSum,"incSum", incSum);
-    }
+    protected Long id = null;
+    protected String planeName = "План от "+LocalDate.now();
+    protected LocalDate startPlane = LocalDate.now();
+    protected LocalDate endPlane =  LocalDate.now().plusMonths(1);
+    protected Long startSum = 0L;
+    protected Long expPlanOnDays = 0L;
+    protected Integer planDays = Math.toIntExact(ChronoUnit.DAYS.between(startPlane, endPlane));
+    protected ArrayList<LocalDate> keyPoints = new ArrayList<>();
+    protected ArrayList<Period> periods = new ArrayList<>();
 
     public ArrayList<LocalDate> getKeyPoints() {
         return keyPoints;
@@ -92,11 +79,11 @@ public class PlansDTO {
         return this;
     }
 
-    public ArrayList<PeriodDTO> getPeriods() {
+    public ArrayList<Period> getPeriods() {
         return periods;
     }
 
-    public PlansDTO setPeriods(ArrayList<PeriodDTO> periods) {
+    public PlansDTO setPeriods(ArrayList<Period> periods) {
         this.periods = periods;
         return this;
     }
@@ -115,6 +102,7 @@ public class PlansDTO {
         return planeName;
     }
 
+
     public String toStringMy() {
         return "PlansDTO{" +
                 "id=" + id +
@@ -122,6 +110,7 @@ public class PlansDTO {
                 ", startPlane=" + startPlane +
                 ", endPlane=" + endPlane +
                 ", startSum=" + startSum +
+                ", expPlanOnDays=" + expPlanOnDays +
                 ", planDays=" + planDays +
                 ", keyPoints=" + keyPoints +
                 ", periods=" + periods +

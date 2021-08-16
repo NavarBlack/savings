@@ -1,11 +1,11 @@
 package su.savings.dto;
 
 public class OperationDTO {
-    private Long id;
-    private Long sum;
-    private String name = "Операция";
-    private Long periodId;
-    private Boolean ExpType = false;
+    protected Long id;
+    protected Long sum;
+    protected String name = "Операция";
+    protected Long periodId;
+    protected Boolean ExpType = false;
 
     public Long getId() {
         return id;

@@ -10,9 +10,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import su.nevar.controls.NumberField;
-import su.savings.actionModels.Operation;
-import su.savings.actionModels.Period;
-import su.savings.actionModels.Plan;
+import su.savings.dto.actionModels.Operation;
+import su.savings.dto.actionModels.Period;
+import su.savings.dto.actionModels.Plan;
 import su.savings.controllers.MainController;
 import su.savings.customFiews.NCell;
 import su.savings.customFiews.NCellNCellOperation;
@@ -115,8 +115,8 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
 
     private void getStatisticPeriod(Period period){
         fxRemainsEnd.setText(period.countEndSumPeriod().toString());
-        fxTotalExp.setText(period.getStatistic().get("expSum").toString());
-        fxTotalInc.setText(period.getStatistic().get("incSum").toString());
+        fxTotalExp.setText(period.statistic().get("expSum").toString());
+        fxTotalInc.setText(period.statistic().get("incSum").toString());
     }
 
     public void setComboBox(ObservableList<Plan> observableList) {
@@ -160,8 +160,8 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
         ListView<Plan> PlanListView = mainController.getTabPlansController().getFxAllPlans();
         Plan oldPlan = PlanListView.getItems().get(PlanListView.getItems().indexOf(fxCurrentPlan.getValue()));
         Period oldPeriod = oldPlan.getPeriods().stream().filter(op -> op.getStartPeriod() == newPeriod.getStartPeriod()).findFirst().orElse(null);
-        oldPlan.getPeriods().set(oldPlan.getPeriods().indexOf(oldPeriod), newPeriod);
-        Plan newPlan = updatePlanOnForm(oldPlan);
+//        oldPlan.getPeriods().set(oldPlan.getPeriods().indexOf(oldPeriod), newPeriod);
+        Plan newPlan = updatePlanOnForm(oldPlan, oldPeriod, newPeriod);
         replacementObj(PlanListView, oldPlan, newPlan);
         replacementObj(fxCurrentPlan, oldPlan, newPlan);
         fxListViewPeriods.getItems().setAll(fxCurrentPlan.getValue().getPeriods());
@@ -192,8 +192,7 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
 
     public void onTest(){
         Period p = fxListViewPeriods.getSelectionModel().getSelectedItem();
-        System.out.println("" + p.toString());
-        System.out.println("p.countOperation() = " + p.countOperation());
-        System.out.println("p.countEndSumPeriod() = " + p.countEndSumPeriod());
+        System.out.println(p.toString());
+
     }
 }

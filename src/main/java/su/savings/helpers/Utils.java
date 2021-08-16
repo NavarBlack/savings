@@ -2,34 +2,19 @@ package su.savings.helpers;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import su.savings.actionModels.Period;
-import su.savings.actionModels.Plan;
+import su.savings.dto.actionModels.Period;
+import su.savings.dto.actionModels.Plan;
 import su.savings.controllers.tabs.TabPlansController;
-import su.savings.dto.PlansDTO;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
 public class Utils {
-//    public static Integer getIntCheckNull(Long l) {
-//        if (l != null) return l.intValue();
-//        else return 0;
-//    }
-
     public static Long getLongToString(String s) {
         if (s.length() > 0) return Long.parseLong(s);
         else return 0L;
     }
-
-//    public static Integer getIntToString(String s) {
-//        if (s.length() > 0) return Integer.parseInt(s);
-//        else return 0;
-//    }
 
     public static LocalDate stringToLocalDate(String s) {
         return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -40,8 +25,7 @@ public class Utils {
         plans.setStartPlane(pc.getFxStartPlane().getValue());
         plans.setEndPlane(pc.getFxEndPlane().getValue());
         plans.setStartSum(Utils.getLongToString(pc.getFxStartSum().getText()));
-        plans.setExpPlanOnDays(pc.countExpOnDey());
-        plans.setPlanDays((int) ChronoUnit.DAYS.between(pc.getFxStartPlane().getValue(), pc.getFxEndPlane().getValue()));
+        plans.setPlanDays(plans.countPlanDays());
         plans.setKeyPoints(Converter.listViewToArrayList(pc.getFxKeyPoints()));
         plans.setPeriods(fitPeriod(plans));
         return plans;
@@ -51,42 +35,50 @@ public class Utils {
         ArrayList<Period> periodDTOArrayList = new ArrayList<>();
         LocalDate step = plans.getStartPlane();
         Long startSumFirstPeriod = plans.getStartSum();
+        Long planDays = plans.getPlanDays();
+        Long preliminaryExpOnDay = plans.preliminaryExpOnDey();
         for (LocalDate ld : plans.getKeyPoints()) {
-            Period newPeriod = fitPeriodOnModel(step, ld, startSumFirstPeriod, plans.getExpPlanOnDays());
+            Period newPeriod = fitPeriodOnModel(step, ld, startSumFirstPeriod, planDays, preliminaryExpOnDay );
             periodDTOArrayList.add(newPeriod);
             step = ld;
             startSumFirstPeriod = newPeriod.getEndSum();
         }
-        periodDTOArrayList.add(fitPeriodOnModel(step, plans.getEndPlane(), startSumFirstPeriod, plans.getExpPlanOnDays()));
+        periodDTOArrayList.add(fitPeriodOnModel(step, plans.getEndPlane(), startSumFirstPeriod, planDays, preliminaryExpOnDay));
         return periodDTOArrayList;
     }
 
-    private static Period fitPeriodOnModel(LocalDate step, LocalDate end, Long statSum, Long expOnDey){
+    private static Period fitPeriodOnModel(LocalDate step, LocalDate end, Long statSum, Long planDey, Long preliminaryExpOnDay){
         Period period = new Period();
-        period.setStartPeriod(step);
-        period.setEndPeriod(end);
-        period.setStartSum(statSum);
-        period.setExpOnDey(expOnDey);
-        period.setPeriodDays(period.countPeriodDays());
-        period.setEndSum(period.countEndSumPeriod());
+        period.setStartPeriod(step)
+        .setEndPeriod(end)
+        .setStartSum(statSum)
+        .setExpOnDey(preliminaryExpOnDay)
+        .setPeriodDays(period.countPeriodDays())
+        .setPlanDays(planDey)
+        .setEndSum(period.countEndSumPeriod());
         return period;
     }
 
-    public static Plan updatePlanOnForm(Plan plans) {
-        plans.setExpPlanOnDays(plans.getStatistic().get("expOnDey"));
-        plans.setPeriods(upDatePeriod(plans.getPeriods(), plans.getExpPlanOnDays()));
+    public static Plan updatePlanOnForm(Plan plans, Period oldPeriod, Period newPeriod) {
+        int indexOlpPeriod = plans.getPeriods().indexOf(oldPeriod);
+        plans.getPeriods().set(indexOlpPeriod, newPeriod);
+        plans.setPeriods(upDatePeriod(plans.getPeriods(), indexOlpPeriod));
         return plans;
     }
 
-    public static ArrayList<Period> upDatePeriod(ArrayList<Period> periods, Long expOnDey) {
-        AtomicReference<Long> startSum = new AtomicReference<>(periods.get(0).getStartSum());
-        return periods.stream().peek(p -> {
-                    p.setStartSum(startSum.get());
-                    p.setExpOnDey(expOnDey);
-                    p.setEndSum(p.countEndSumPeriod());
-                    startSum.set(p.getEndSum());
-                }
-        ).collect(Collectors.toCollection(ArrayList::new));
+    public static ArrayList<Period> upDatePeriod(ArrayList<Period> periods, Integer indexOldPeriod) {
+//        AtomicReference<Long> startSum = new AtomicReference<>(periods.get(0).getStartSum());
+//        return periods.stream().peek(p -> {
+//                    p.setStartSum(startSum.get());
+//                    p.setEndSum(p.countEndSumPeriod());
+//                    startSum.set(p.getEndSum());
+//                }
+//        ).collect(Collectors.toCollection(ArrayList::new));
+        Long startSum = 0L;
+        for (Period period : periods){
+
+        }
+        return periods;
     }
 
 

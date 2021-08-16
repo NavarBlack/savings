@@ -1,6 +1,6 @@
 package su.savings.dto;
 
-import su.savings.actionModels.Period;
+import su.savings.dto.actionModels.Period;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -11,8 +11,7 @@ public class PlansDTO {
     protected LocalDate startPlane = LocalDate.now();
     protected LocalDate endPlane =  LocalDate.now().plusMonths(1);
     protected Long startSum = 0L;
-    protected Long expPlanOnDays = 0L;
-    protected Integer planDays = Math.toIntExact(ChronoUnit.DAYS.between(startPlane, endPlane));
+    protected Long planDays = ChronoUnit.DAYS.between(startPlane, endPlane);
     protected ArrayList<LocalDate> keyPoints = new ArrayList<>();
     protected ArrayList<Period> periods = new ArrayList<>();
 
@@ -70,11 +69,11 @@ public class PlansDTO {
         return this;
     }
 
-    public Integer getPlanDays() {
+    public Long getPlanDays() {
         return planDays;
     }
 
-    public PlansDTO setPlanDays(Integer planDays) {
+    public PlansDTO setPlanDays(Long planDays) {
         this.planDays = planDays;
         return this;
     }
@@ -85,15 +84,6 @@ public class PlansDTO {
 
     public PlansDTO setPeriods(ArrayList<Period> periods) {
         this.periods = periods;
-        return this;
-    }
-
-    public Long getExpPlanOnDays() {
-        return expPlanOnDays;
-    }
-
-    public PlansDTO setExpPlanOnDays(Long expPlanOnDays) {
-        this.expPlanOnDays = expPlanOnDays;
         return this;
     }
 
@@ -110,7 +100,6 @@ public class PlansDTO {
                 ", startPlane=" + startPlane +
                 ", endPlane=" + endPlane +
                 ", startSum=" + startSum +
-                ", expPlanOnDays=" + expPlanOnDays +
                 ", planDays=" + planDays +
                 ", keyPoints=" + keyPoints +
                 ", periods=" + periods +

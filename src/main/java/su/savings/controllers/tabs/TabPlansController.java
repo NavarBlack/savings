@@ -10,7 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import su.nevar.controls.NumberField;
-import su.savings.actionModels.Plan;
+import su.savings.dto.actionModels.Plan;
 import su.savings.controllers.MainController;
 import su.savings.customFiews.NCell;
 import su.savings.db.RepositoryImpl;
@@ -47,8 +47,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     @FXML
     private Text fxPlanDays;
     @FXML
-    private Text fxExpPlanOnDays;
-    @FXML
     private ListView<LocalDate> fxKeyPoints;
     @FXML
     private DatePicker fxKeyPointsDate;
@@ -70,10 +68,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                         if ("0".equals(fxStartSum.getText())) {
                             fxStartSum.setText("");
                         }
-                    } else {
-                        if (!fxStartSum.getText().equals("0")) {
-                            countExpOnDey();
-                        }
                     }
                 }
         );
@@ -82,11 +76,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
         addListener();
     }
 
-    public Long countExpOnDey() {
-        Long res = (Long.parseLong(fxStartSum.getText()) / ChronoUnit.DAYS.between(fxStartPlane.getValue(), fxEndPlane.getValue())/100*100);
-        fxExpPlanOnDays.setText(res.toString());
-        return res;
-    }
 
     private void setDataForm(Plan plans) {
         fxStartSum.setText(plans.getStartSum().toString());
@@ -94,7 +83,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
         fxStartPlane.setValue(plans.getStartPlane());
         fxEndPlane.setValue(plans.getEndPlane());
         fxPlanDays.setText("Дней: " + plans.getPlanDays().toString());
-        fxExpPlanOnDays.setText(plans.getExpPlanOnDays().toString());
         fxKeyPoints.getItems().setAll(FXCollections.observableArrayList(plans.getKeyPoints()));
     }
 

@@ -1,8 +1,8 @@
 package su.savings.db;
 
-import su.savings.actionModels.Operation;
-import su.savings.actionModels.Period;
-import su.savings.actionModels.Plan;
+import su.savings.dto.actionModels.Operation;
+import su.savings.dto.actionModels.Period;
+import su.savings.dto.actionModels.Plan;
 import su.savings.helpers.Converter;
 
 import java.sql.ResultSet;
@@ -39,8 +39,7 @@ public class RepositoryImpl implements Repository {
                     .setStartPlane(Instant.ofEpochMilli(rs.getDate("START_PLAN").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
                     .setEndPlane(Instant.ofEpochMilli(rs.getDate("END_PLAN").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
                     .setStartSum(rs.getLong("START_SUM"))
-                    .setExpPlanOnDays(rs.getLong("EXP_ON_DEY"))
-                    .setPlanDays(rs.getInt("PLAN_DAYS"))
+                    .setPlanDays(rs.getLong("PLAN_DAYS"))
                     .setKeyPoints(Converter.stringToArrayList(rs.getString("KEY_POINTS")))
                     .setPeriods(new ArrayList<>(Objects.requireNonNull(getPeriodOnPlan(rs.getLong("id")))));
             return plansDTO;
@@ -62,15 +61,16 @@ public class RepositoryImpl implements Repository {
     private Period periodMapper(ResultSet rs) {
         try {
             Period period = new Period();
-            period.setId(rs.getLong("id"));
-            period.setStartPeriod(Instant.ofEpochMilli(rs.getDate("START_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
-            period.setEndPeriod(Instant.ofEpochMilli(rs.getDate("END_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
-            period.setPeriodDays(rs.getInt("DAYS_PERIOD"));
-            period.setStartSum(rs.getLong("START_SUM"));
-            period.setEndSum(rs.getLong("END_SUM"));
-            period.setExpOnDey(rs.getLong("EXP_ON_DEY"));
-            period.setPlanId(rs.getLong("PLAN_ID"));
-            period.setOperations(new ArrayList<>(Objects.requireNonNull(getOperation(rs.getLong("id")))));
+            period.setId(rs.getLong("id"))
+            .setStartPeriod(Instant.ofEpochMilli(rs.getDate("START_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
+            .setEndPeriod(Instant.ofEpochMilli(rs.getDate("END_PERIOD").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
+            .setPeriodDays(rs.getLong("PERIOD_DAYS"))
+            .setStartSum(rs.getLong("START_SUM"))
+            .setEndSum(rs.getLong("END_SUM"))
+            .setExpOnDey(rs.getLong("EXP_ON_DEY"))
+            .setPlanId(rs.getLong("PLAN_ID"))
+            .setPlanDays(rs.getLong("PLAN_DAYS"))
+            .setOperations(new ArrayList<>(Objects.requireNonNull(getOperation(rs.getLong("id")))));
             return period;
 
         } catch (Exception e) {
@@ -106,17 +106,16 @@ public class RepositoryImpl implements Repository {
     public Long savePlan(Plan plansDTO) {
         try {
             Long id = database.executeUpdate("""
-                            insert into ALL_PLANS (PLAN_NAME, START_PLAN, END_PLAN, START_SUM, EXP_ON_DEY, PLAN_DAYS) values ( ?,?,?,?,?,? );
+                            insert into ALL_PLANS (PLAN_NAME, START_PLAN, END_PLAN, START_SUM, PLAN_DAYS) values ( ?,?,?,?,? );
                             """,
                     stringParam(plansDTO.getPlaneName()),
                     dateParam(plansDTO.getStartPlane()),
                     dateParam(plansDTO.getEndPlane()),
                     longParam(plansDTO.getStartSum()),
-                    longParam(plansDTO.getExpPlanOnDays()),
-                    intParam(plansDTO.getPlanDays())
+                    longParam(plansDTO.getPlanDays())
             );
-            plansDTO.getKeyPoints().forEach(localDate -> savePlanKeyPoint(localDate, id));
-            plansDTO.getPeriods().forEach(periodDTO -> savePeriodPlan(periodDTO, id, plansDTO.getExpPlanOnDays()));
+            plansDTO.getKeyPoints().forEach(localDate -> saveOrUpdatePlanKeyPoint(localDate, id));
+            plansDTO.getPeriods().forEach(periodDTO -> saveOrUpdatePeriodPlan(periodDTO, id, plansDTO.preliminaryExpOnDey(), periodDTO.getPlanDays()));
             return id;
         } catch (SQLException ex) {
             ex.forEach(System.out::println);
@@ -126,7 +125,7 @@ public class RepositoryImpl implements Repository {
 
 
     @Override
-    public void savePlanKeyPoint(LocalDate localDate, Long idPlan) {
+    public void saveOrUpdatePlanKeyPoint(LocalDate localDate, Long idPlan) {
         try {
             database.executeUpdate("""
                             insert into KEY_POINTS (DATE_POINT, PLAN_ID) values (?,?)
@@ -140,7 +139,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void savePeriodPlan(Period period, Long idPlan, Long expOnDey) {
+    public void saveOrUpdatePeriodPlan(Period period, Long idPlan, Long expOnDey, Long planDays) {
         try {
             Long idPeriod = database.executeUpdate("""
                             insert into ALL_PERIODS (
@@ -149,26 +148,28 @@ public class RepositoryImpl implements Repository {
                              START_SUM,
                              END_SUM,
                              EXP_ON_DEY,
-                             DAYS_PERIOD,
+                             PERIOD_DAYS,
+                             PLAN_DAYS,
                              PLAN_ID
-                             ) VALUES (?,?,?,?,?,?,?)
+                             ) VALUES (?,?,?,?,?,?,?,?)
                             """,
                     dateParam(period.getStartPeriod()),
                     dateParam(period.getEndPeriod()),
                     longParam(period.getStartSum()),
                     longParam(period.getEndSum()),
                     longParam(expOnDey),
-                    intParam(period.getPeriodDays()),
+                    longParam(period.getPeriodDays()),
+                    longParam(planDays),
                     longParam(idPlan)
             );
-            period.getOperations().forEach(op -> savaOperationPeriod(op, idPeriod));
+            period.getOperations().forEach(op -> savaOrUpDateOperationPeriod(op, idPeriod));
         } catch (SQLException ex) {
             ex.forEach(System.out::println);
         }
     }
 
     @Override
-    public void savaOperationPeriod(Operation operation, Long idPeriod) {
+    public void savaOrUpDateOperationPeriod(Operation operation, Long idPeriod) {
         try {
             database.executeUpdate("""
                             insert into OPERATIONS (OPERATION_NAME, SUM, PERIOD_ID, EXP_TAPE) VALUES(?,?,?,?)
@@ -208,74 +209,16 @@ public class RepositoryImpl implements Repository {
                     dateParam(plan.getStartPlane()),
                     dateParam(plan.getEndPlane()),
                     longParam(plan.getStartSum()),
-                    intParam(plan.getPlanDays()),
+                    longParam(plan.getPlanDays()),
                     longParam(plan.getId())
             );
             database.executeUpdate("delete from KEY_POINTS where PLAN_ID = ?; ", longParam(idPlan));
-            plan.getKeyPoints().forEach(localDate -> upDatePlanKeyPoint(localDate, idPlan));
+            plan.getKeyPoints().forEach(localDate -> saveOrUpdatePlanKeyPoint(localDate, idPlan));
             database.executeUpdate("delete from ALL_PERIODS where PLAN_ID = ?; ", longParam(idPlan));
-            plan.getPeriods().forEach(p -> upDatePeriodPlan(p, idPlan, plan.getExpPlanOnDays()));
+            plan.getPeriods().forEach(p -> saveOrUpdatePeriodPlan(p, idPlan, plan.preliminaryExpOnDey(), p.getPlanDays()));
         } catch (SQLException ex) {
             ex.forEach(System.out::println);
         }
     }
 
-    @Override
-    public void upDatePlanKeyPoint(LocalDate localDate, Long idPlan) {
-        try {
-            database.executeUpdate("""
-                            insert into KEY_POINTS (DATE_POINT, PLAN_ID) VALUES(?,?);
-                            """,
-                    dateParam(localDate),
-                    longParam(idPlan)
-            );
-        } catch (SQLException ex) {
-            ex.forEach(System.out::println);
-        }
-    }
-
-    @Override
-    public void upDatePeriodPlan(Period period, Long idPlan, Long expOnDey) {
-        try {
-            Long periodId = database.executeUpdate("""
-                            insert into ALL_PERIODS (
-                             START_PERIOD,
-                             END_PERIOD,
-                             START_SUM,
-                             END_SUM,
-                             EXP_ON_DEY,
-                             DAYS_PERIOD,
-                             PLAN_ID
-                             ) VALUES (?,?,?,?,?,?,?)
-                            """,
-                    dateParam(period.getStartPeriod()),
-                    dateParam(period.getEndPeriod()),
-                    longParam(period.getStartSum()),
-                    longParam(period.getEndSum()),
-                    longParam(expOnDey),
-                    intParam(period.getPeriodDays()),
-                    longParam(idPlan)
-            );
-            period.getOperations().forEach(op -> upDateOperationPeriod(op, periodId));
-        } catch (SQLException ex) {
-            ex.forEach(System.out::println);
-        }
-    }
-
-    @Override
-    public void upDateOperationPeriod(Operation operation, Long idPeriod) {
-        try {
-            database.executeUpdate("""
-                            insert into OPERATIONS (OPERATION_NAME, SUM, PERIOD_ID, EXP_TYPE) VALUES(?,?,?,?)
-                                    """,
-                    stringParam(operation.getName()),
-                    longParam(operation.getSum()),
-                    longParam(idPeriod),
-                    boolenParam(operation.getExpType())
-
-            );
-        } catch (SQLException ex) {
-            ex.forEach(System.out::println);
-        }
-    }
 }

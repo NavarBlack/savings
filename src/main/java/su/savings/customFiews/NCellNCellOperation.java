@@ -4,7 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import su.savings.actionModels.Operation;
+import su.savings.dto.actionModels.Operation;
 
 import java.io.IOException;
 

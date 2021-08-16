@@ -1,19 +1,20 @@
 package su.savings.dto;
 
-import su.savings.actionModels.Operation;
+import com.google.common.base.MoreObjects;
+import su.savings.dto.actionModels.Operation;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class PeriodDTO {
-    protected Long id = null;
-    protected LocalDate startPeriod = LocalDate.now();
-    protected LocalDate endPeriod =  LocalDate.now().plusMonths(1);
-    protected Long startSum = 0L;
-    protected Long endSum = 0L;
-    protected Long expOnDey = 0L;
-    protected Integer periodDays = Math.toIntExact(ChronoUnit.DAYS.between(startPeriod, endPeriod));
+    protected Long id;
+    protected LocalDate startPeriod;
+    protected LocalDate endPeriod;
+    protected Long startSum;
+    protected Long endSum;
+    protected Long expOnDey;
+    protected Long periodDays;
+    protected Long planDays;
     protected ArrayList<Operation> operations = new ArrayList<>();
     protected Long planId;
 
@@ -71,11 +72,11 @@ public class PeriodDTO {
         return this;
     }
 
-    public Integer getPeriodDays() {
+    public Long getPeriodDays() {
         return periodDays;
     }
 
-    public PeriodDTO setPeriodDays(Integer periodDays) {
+    public PeriodDTO setPeriodDays(Long periodDays) {
         this.periodDays = periodDays;
         return this;
     }
@@ -98,18 +99,28 @@ public class PeriodDTO {
         return this;
     }
 
+    public Long getPlanDays() {
+        return planDays;
+    }
+
+    public PeriodDTO setPlanDays(Long planDays) {
+        this.planDays = planDays;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return "PeriodDTO{" +
-                "id=" + id +
-                ", startPeriod=" + startPeriod +
-                ", endPeriod=" + endPeriod +
-                ", startSum=" + startSum +
-                ", endSum=" + endSum +
-                ", expOnDey=" + expOnDey +
-                ", periodDays=" + periodDays +
-                ", operations=" + operations +
-                ", planId=" + planId +
-                '}';
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("startPeriod", startPeriod)
+                .add("endPeriod", endPeriod)
+                .add("startSum", startSum)
+                .add("endSum", endSum)
+                .add("expOnDey", expOnDey)
+                .add("periodDays", periodDays)
+                .add("planDays", planDays)
+                .add("operations", operations)
+                .add("planId", planId)
+                .toString();
     }
 }

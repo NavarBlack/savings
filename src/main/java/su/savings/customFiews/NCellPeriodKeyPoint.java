@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.text.Text;
-import su.savings.actionModels.Period;
+import su.savings.dto.actionModels.Period;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;

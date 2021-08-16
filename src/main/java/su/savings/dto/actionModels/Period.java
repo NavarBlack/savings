@@ -1,4 +1,4 @@
-package su.savings.actionModels;
+package su.savings.dto.actionModels;
 
 import su.savings.dto.OperationDTO;
 import su.savings.dto.PeriodDTO;
@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 public class Period extends PeriodDTO {
-    public Map<String, Long> getStatistic(){
+    public Map<String, Long> statistic(){
         Long remSum = startSum;
         Long expSum = 0L;
         Long incSum = 0L;
@@ -22,6 +22,7 @@ public class Period extends PeriodDTO {
         remSum = remSum - expSum + incSum;
         return Map.of("remSum", remSum, "expSum",expSum,"incSum", incSum, "remExpOnDey", remExpOnDey);
     }
+
 
     public Long countEndSumPeriod(){
         Long expOnDeyInPeriod = expOnDey * periodDays;
@@ -38,8 +39,7 @@ public class Period extends PeriodDTO {
         return res;
     }
 
-    public Integer countPeriodDays(){
-        long res = ChronoUnit.DAYS.between(startPeriod, endPeriod);
-        return (int) res;
+    public Long countPeriodDays(){
+        return ChronoUnit.DAYS.between(startPeriod, endPeriod);
     }
 }

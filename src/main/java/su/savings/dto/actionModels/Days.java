@@ -1,4 +1,4 @@
-package su.savings.actionModels;
+package su.savings.dto.actionModels;
 
 import su.savings.dto.DaysDto;
 

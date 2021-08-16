@@ -76,9 +76,6 @@
                   <Button mnemonicParsing="false" onAction="#savePlan" prefHeight="209.0" prefWidth="82.0" text="Сохранить" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                   <Text fx:id="fxPlanDays" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <NumberField fx:id="fxStartSum" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Дней" GridPane.columnIndex="2" />
-                  <Label text="На день" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Text fx:id="fxExpPlanOnDays" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                </children>
             </GridPane>
          </children></AnchorPane>

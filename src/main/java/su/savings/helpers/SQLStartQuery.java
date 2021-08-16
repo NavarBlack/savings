@@ -9,8 +9,7 @@ public abstract class SQLStartQuery {
                                         	START_PLAN DATE not null,
                                         	END_PLAN DATE not null,
                                         	START_SUM BIGINT not null,
-                                        	EXP_ON_DEY BIGINT not null,
-                                        	PLAN_DAYS int not null
+                                        	PLAN_DAYS BIGINT not null
                                         );
                             
                                         create unique index if not exists ALL_PLANS_ID_uindex
@@ -49,7 +48,8 @@ public abstract class SQLStartQuery {
             	START_SUM BIGINT,
             	END_SUM BIGINT,
             	EXP_ON_DEY BIGINT not null,
-            	DAYS_PERIOD INT not null,
+            	PERIOD_DAYS BIGINT not null,
+            	PLAN_DAYS BIGINT not null,
             	PLAN_ID BIGINT not null,
             	constraint ALL_PERIODS_ALL_PLANS_ID_fk
             		foreign key (PLAN_ID) references ALL_PLANS on delete cascade

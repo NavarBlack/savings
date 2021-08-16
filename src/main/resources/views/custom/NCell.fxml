@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="24.0" prefWidth="45.0" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <graphic>
+      <VBox prefHeight="130.0" prefWidth="170.0">
+         <children>
+            <Label fx:id="planeName" text="Label" />
+         </children>
+      </VBox>
+   </graphic>
+</fx:root>

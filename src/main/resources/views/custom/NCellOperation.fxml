@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root prefHeight="24.0" prefWidth="83.0" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <graphic>
+      <HBox prefHeight="18.0" prefWidth="144.0" spacing="10.0">
+         <children>
+            <Label fx:id="name" text="Label" />
+            <Label fx:id="sum" text="Label" />
+            <Label fx:id="type" text="Label" />
+         </children>
+      </HBox>
+   </graphic>
+</fx:root>

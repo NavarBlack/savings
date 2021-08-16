@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+group 'su.savings'
+version '0.003'
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = '16'
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    implementation fileTree(dir: 'lib', includes: ['NevarJavaFxControls-0.0.04.jar'])
+    implementation "com.h2database:h2:1.4.200"
+    implementation "com.google.inject:guice:5.0.1"
+    implementation "org.vibur:vibur-dbcp:25.0"
+    implementation "javax.enterprise:cdi-api:2.0.SP1"
+    implementation "javax.validation:validation-api:2.0.1.Final"
+    implementation "javax.ejb:ejb-api:3.0"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'su.savings.Main'
+        )
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

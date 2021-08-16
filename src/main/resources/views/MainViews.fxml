@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane fx:id="root" prefHeight="777.0" prefWidth="1043.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="su.savings.controllers.MainController">
+   <children>
+      <BorderPane layoutX="350.0" layoutY="158.0" prefHeight="583.0" prefWidth="883.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+              <tabs>
+                <Tab text="Планы">
+                     <content>
+                        <fx:include fx:id="tabPlans" source="tabs/TabPlans.fxml" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+                     </content>
+                  </Tab>
+                <Tab closable="false" text="Периоды">
+                     <content>
+                        <fx:include fx:id="tabPeriods" source="tabs/TabPeriods.fxml" />
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Дни">
+                     <content>
+                        <fx:include fx:id="tabDays" source="tabs/TabDays.fxml" />
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </center>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="План">
+                  <items>
+                    <MenuItem fx:id="savePlan" mnemonicParsing="false" onAction="#onSavePlan" text="Сохранить" />
+                  </items>
+                </Menu>
+                <Menu disable="true" mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu disable="true" mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+      </BorderPane>
+   </children>
+</AnchorPane>

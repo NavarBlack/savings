@@ -14,19 +14,27 @@
          <center>
             <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
-                <Tab text="Планы">
+                <Tab fx:id="tabPlan" text="Планы">
                      <content>
-                        <fx:include fx:id="tabPlans" source="tabs/TabPlans.fxml" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+                        <fx:include fx:id="tabPlans"
+                                    source="tabs/TabPlans.fxml"
+                                    AnchorPane.bottomAnchor="20.0"
+                                    AnchorPane.leftAnchor="10.0"
+                                    AnchorPane.rightAnchor="10.0"
+                                    AnchorPane.topAnchor="20.0"
+                                    xmlns:fx="http://javafx.com/fxml/1"
+
+                        />
                      </content>
                   </Tab>
-                <Tab closable="false" text="Периоды">
+                <Tab fx:id="tabPeriod" closable="false" text="Периоды">
                      <content>
                         <fx:include fx:id="tabPeriods" source="tabs/TabPeriods.fxml" />
                      </content>
                   </Tab>
-                  <Tab closable="false" text="Дни">
+                  <Tab fx:id="tabDay" closable="false" text="Дни">
                      <content>
-                        <fx:include fx:id="tabDays" source="tabs/TabDays.fxml" />
+                        <fx:include  fx:id="tabDays" source="tabs/TabDays.fxml" />
                      </content>
                   </Tab>
               </tabs>
@@ -38,6 +46,7 @@
                 <Menu mnemonicParsing="false" text="План">
                   <items>
                     <MenuItem fx:id="savePlan" mnemonicParsing="false" onAction="#onSavePlan" text="Сохранить" />
+                    <MenuItem fx:id="lockPeriod" mnemonicParsing="false" onAction="#setLockPeriod" text="Lock Period" />
                   </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Edit">

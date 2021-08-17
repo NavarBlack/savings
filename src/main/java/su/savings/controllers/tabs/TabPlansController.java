@@ -19,11 +19,10 @@ import su.savings.helpers.Utils;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
 
 
 public class TabPlansController implements Initializable, NCell.ChangeForm {
@@ -125,6 +124,8 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                 Plan newPlan = Utils.filPlan(new Plan(), this);
                 newPlan.setId(repository.savePlan(Utils.filPlan(new Plan(), this)));
                 fxAllPlans.getItems().add(newPlan);
+                mainController.getTabPeriodsController().getFxCurrentPlan().setItems(fxAllPlans.getItems());
+                mainController.getTabPeriods().setDisable(false);
             } else {
                 Plan oldPlan = fxAllPlans
                         .getItems()
@@ -135,13 +136,12 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                 Plan newPlan = Utils.filPlan(oldPlan, this);
                 fxAllPlans.getItems().set(fxAllPlans.getItems().indexOf(oldPlan), newPlan);
                 updatePlan(newPlan);
-
+                mainController.getTabPeriods().setDisable(false);
             }
         }
     }
 
     public void updatePlan(Plan plans) {
-    plans.getPeriods().stream().map(p -> p.setFinalSing(!p.getFinalSing())).collect(Collectors.toCollection(ArrayList::new));
     mainController.getTabPeriodsController().getFxListViewPeriods().getSelectionModel().selectFirst();
 //        repository.upDatePlan(plans);
     }

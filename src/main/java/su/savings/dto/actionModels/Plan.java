@@ -12,7 +12,7 @@ public class Plan extends PlansDTO {
         Long incSum = 0L;
         Long totalExpOnDey = 0L;
         for (Period per : periods){
-            Map<String,Long> calcPer = per.statistic();
+            Map<String,Long> calcPer = per.countMoneyStat();
             expSum += calcPer.get("expSum");
             incSum += calcPer.get("incSum");
             totalExpOnDey += calcPer.get("remExpOnDey");
@@ -25,8 +25,7 @@ public class Plan extends PlansDTO {
     }
 
     public Long countPlanDays(){
-        Long res = ChronoUnit.DAYS.between(startPlane, endPlane);
-        return res;
+        return ChronoUnit.DAYS.between(startPlane, endPlane);
     }
 
     public Long preliminaryExpOnDey (){

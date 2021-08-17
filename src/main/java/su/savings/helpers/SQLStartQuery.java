@@ -50,6 +50,7 @@ public abstract class SQLStartQuery {
             	EXP_ON_DEY BIGINT not null,
             	PERIOD_DAYS BIGINT not null,
             	PLAN_DAYS BIGINT not null,
+            	PAST_DAYS BIGINT not null,
             	PLAN_ID BIGINT not null,
             	constraint ALL_PERIODS_ALL_PLANS_ID_fk
             		foreign key (PLAN_ID) references ALL_PLANS on delete cascade
@@ -70,6 +71,8 @@ public abstract class SQLStartQuery {
             	SUM BIGINT not null,
             	PERIOD_ID int not null,
             	EXP_TYPE BOOL default false not null,
+            	NPO_DATE DATE,
+            	NPO_TYPE BOOL default false not null,
             	constraint OPERATIONS_ALL_PERIODS_ID_fk
             		foreign key (PERIOD_ID) references ALL_PERIODS on delete cascade
             );

@@ -1,6 +1,5 @@
 package su.savings.helpers;
 
-import javafx.scene.SubScene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import su.savings.dto.actionModels.Period;
@@ -9,10 +8,8 @@ import su.savings.controllers.tabs.TabPlansController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class Utils {
     public static Long getLongToString(String s) {
@@ -41,17 +38,19 @@ public class Utils {
         Long startSumFirstPeriod = plans.getStartSum();
         Long planDays = plans.getPlanDays();
         Long preliminaryExpOnDay = plans.preliminaryExpOnDey();
+        Long pastDay = 0L;
         for (LocalDate ld : plans.getKeyPoints()) {
-            Period newPeriod = fitPeriodOnModel(step, ld, startSumFirstPeriod, planDays, preliminaryExpOnDay);
+            Period newPeriod = fitPeriodOnModel(step, ld, startSumFirstPeriod, planDays, preliminaryExpOnDay, pastDay);
+            pastDay += newPeriod.getPeriodDays();
             periodDTOArrayList.add(newPeriod);
             step = ld;
             startSumFirstPeriod = newPeriod.getEndSum();
         }
-        periodDTOArrayList.add(fitPeriodOnModel(step, plans.getEndPlane(), startSumFirstPeriod, planDays, preliminaryExpOnDay));
+        periodDTOArrayList.add(fitPeriodOnModel(step, plans.getEndPlane(), startSumFirstPeriod, planDays, preliminaryExpOnDay, pastDay));
         return periodDTOArrayList;
     }
 
-    private static Period fitPeriodOnModel(LocalDate step, LocalDate end, Long statSum, Long planDey, Long preliminaryExpOnDay) {
+    private static Period fitPeriodOnModel(LocalDate step, LocalDate end, Long statSum, Long planDey, Long preliminaryExpOnDay, Long pastDay) {
         Period period = new Period();
         period.setStartPeriod(step)
                 .setEndPeriod(end)
@@ -59,38 +58,38 @@ public class Utils {
                 .setExpOnDey(preliminaryExpOnDay)
                 .setPeriodDays(period.countPeriodDays())
                 .setPlanDays(planDey)
-                .setEndSum(period.countEndSumPeriod());
+                .setEndSum(period.countMoneyStat().get("endSum"))
+                .setPastDaysOnPlan(pastDay);
         return period;
     }
 
     public static Plan updatePlanOnForm(Plan plans, Period oldPeriod, Period newPeriod) {
         int indexOlpPeriod = plans.getPeriods().indexOf(oldPeriod);
         Long expOnDayPlan = plans.getStatistic().get("expOnDay");
-        Long planDay = plans.getPlanDays();
         plans.getPeriods().set(indexOlpPeriod, newPeriod);
-        plans.setPeriods(upDatePeriod(plans.getPeriods(), indexOlpPeriod, planDay, expOnDayPlan));
+        plans.setPeriods(upDatePeriods(plans.getPeriods(), indexOlpPeriod, expOnDayPlan));
         return plans;
     }
 
-    public static ArrayList<Period> upDatePeriod(ArrayList<Period> periods, Integer indexPeriod, Long planDay, Long expOnDayPlan) {
+    public static ArrayList<Period> upDatePeriods(ArrayList<Period> periods, Integer indexPeriod, Long expOnDayPlan) {
         if (indexPeriod == 0) {
-            return test(periods, planDay, expOnDayPlan, null, false);
-        } else if (indexPeriod > 0 && test2(periods)) {
-            return test(periods, planDay, expOnDayPlan, null, false);
+            return upDatePeriod(periods, expOnDayPlan, null, false);
+        } else if (indexPeriod > 0 && checkFinalSing(periods)) {
+            return upDatePeriod(periods, expOnDayPlan, null, false);
         } else {
-            return test(periods, planDay, expOnDayPlan, indexPeriod, true);
+            return upDatePeriod(periods, expOnDayPlan, indexPeriod, true);
         }
 
     }
 
-    private static Boolean test2(ArrayList<Period> periods) {
+    private static Boolean checkFinalSing(ArrayList<Period> periods) {
         return periods.stream().noneMatch(period -> {
             assert period != null;
             return period.getFinalSing();
         });
     }
 
-    private static ArrayList<Period> test(ArrayList<Period> periods, Long planDay, Long expOnDayPlan, Integer indexPeriod, Boolean flag) {
+    private static ArrayList<Period> upDatePeriod(ArrayList<Period> periods, Long expOnDayPlan, Integer indexPeriod, Boolean flag) {
         Long startSum;
         if (flag) {
             Period prevPeriod = periods.get(indexPeriod - 1);
@@ -99,25 +98,21 @@ public class Utils {
             startSum = periods.get(0).getStartSum();
         }
         boolean setNewRemDayExpDay = true;
-        Long remDay = planDay;
         Long currentExpOnDay = expOnDayPlan;
-        Long pastDay = 0L;
         for (Period period : periods) {
             int indexPeriodCurrent = periods.indexOf(period);
             if (flag && setNewRemDayExpDay && indexPeriodCurrent >= indexPeriod) {
-                remDay -= pastDay;
                 setNewRemDayExpDay = false;
-                currentExpOnDay = ((startSum + period.countOperation()) / remDay) / 100 * 100;
-                System.out.println(currentExpOnDay);
+                currentExpOnDay = period.currentExpOnDay(startSum);
+                System.out.println("currentExpOnDay" + " " + currentExpOnDay);
             }
             if (flag && indexPeriodCurrent >= indexPeriod) {
-                period.setStartSum(startSum).setExpOnDey(currentExpOnDay).setEndSum(period.countEndSumPeriod());
+                period.setStartSum(startSum).setExpOnDey(currentExpOnDay).setEndSum(period.countMoneyStat().get("endSum"));
                 startSum = period.getEndSum();
             } else if (!flag) {
-                period.setStartSum(startSum).setExpOnDey(currentExpOnDay).setEndSum(period.countEndSumPeriod());
+                period.setStartSum(startSum).setExpOnDey(currentExpOnDay).setEndSum(period.countMoneyStat().get("endSum"));
                 startSum = period.getEndSum();
             }
-            pastDay += period.getPeriodDays();
         }
         return periods;
     }

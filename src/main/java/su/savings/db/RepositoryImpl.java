@@ -70,6 +70,7 @@ public class RepositoryImpl implements Repository {
             .setExpOnDey(rs.getLong("EXP_ON_DEY"))
             .setPlanId(rs.getLong("PLAN_ID"))
             .setPlanDays(rs.getLong("PLAN_DAYS"))
+            .setPastDaysOnPlan(rs.getLong("PAST_DAYS"))
             .setOperations(new ArrayList<>(Objects.requireNonNull(getOperation(rs.getLong("id")))));
             return period;
 
@@ -95,6 +96,8 @@ public class RepositoryImpl implements Repository {
             operation.setSum(rs.getLong("SUM"));
             operation.setPeriodId(rs.getLong("PERIOD_ID"));
             operation.setExpType(rs.getBoolean("EXP_TYPE"));
+            operation.setNpoDate(Instant.ofEpochMilli(rs.getDate("NPO_DATE").getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+            operation.setNpoType(rs.getBoolean("NPO_TYPE"));
             return operation;
 
         } catch (Exception e) {
@@ -150,8 +153,9 @@ public class RepositoryImpl implements Repository {
                              EXP_ON_DEY,
                              PERIOD_DAYS,
                              PLAN_DAYS,
+                             PAST_DAYS,
                              PLAN_ID
-                             ) VALUES (?,?,?,?,?,?,?,?)
+                             ) VALUES (?,?,?,?,?,?,?,?,?)
                             """,
                     dateParam(period.getStartPeriod()),
                     dateParam(period.getEndPeriod()),
@@ -160,6 +164,7 @@ public class RepositoryImpl implements Repository {
                     longParam(expOnDey),
                     longParam(period.getPeriodDays()),
                     longParam(planDays),
+                    longParam(period.getPastDaysOnPlan()),
                     longParam(idPlan)
             );
             period.getOperations().forEach(op -> savaOrUpDateOperationPeriod(op, idPeriod));
@@ -172,12 +177,21 @@ public class RepositoryImpl implements Repository {
     public void savaOrUpDateOperationPeriod(Operation operation, Long idPeriod) {
         try {
             database.executeUpdate("""
-                            insert into OPERATIONS (OPERATION_NAME, SUM, PERIOD_ID, EXP_TAPE) VALUES(?,?,?,?)
+                            insert into OPERATIONS (
+                            OPERATION_NAME,
+                            SUM,
+                            PERIOD_ID,
+                            EXP_TAPE,
+                            NPO_DATE,
+                            NPO_TYPE
+                            ) VALUES(?,?,?,?,?,?)
                             """,
                     stringParam(operation.getName()),
                     longParam(operation.getSum()),
                     longParam(idPeriod),
-                    boolenParam(operation.getExpType())
+                    boolenParam(operation.getExpType()),
+                    dateParam(operation.getNpoDate()),
+                    boolenParam(operation.getNpoType())
             );
         } catch (SQLException ex) {
             ex.forEach(System.out::println);

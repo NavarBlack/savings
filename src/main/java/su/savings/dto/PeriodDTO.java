@@ -15,6 +15,7 @@ public class PeriodDTO {
     protected Long expOnDey;
     protected Long periodDays;
     protected Long planDays;
+    protected Long pastDaysOnPlan;
     protected ArrayList<Operation> operations = new ArrayList<>();
     protected Long planId;
     protected Boolean finalSing = false;
@@ -118,6 +119,15 @@ public class PeriodDTO {
         return this;
     }
 
+    public Long getPastDaysOnPlan() {
+        return pastDaysOnPlan;
+    }
+
+    public PeriodDTO setPastDaysOnPlan(Long pastDaysOnPlan) {
+        this.pastDaysOnPlan = pastDaysOnPlan;
+        return this;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -129,6 +139,7 @@ public class PeriodDTO {
                 .add("expOnDey", expOnDey)
                 .add("periodDays", periodDays)
                 .add("planDays", planDays)
+                .add("pasDaysOnPlan", pastDaysOnPlan)
                 .add("operations", operations)
                 .add("planId", planId)
                 .add("finalSing", finalSing)

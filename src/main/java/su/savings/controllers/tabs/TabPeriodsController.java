@@ -114,12 +114,13 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
     }
 
     private void getStatisticPeriod(Period period){
-        fxRemainsEnd.setText(period.countEndSumPeriod().toString());
-        fxTotalExp.setText(period.statistic().get("expSum").toString());
-        fxTotalInc.setText(period.statistic().get("incSum").toString());
+        fxRemainsEnd.setText(period.countMoneyStat().get("endSum").toString());
+        fxTotalExp.setText(period.countMoneyStat().get("expSum").toString());
+        fxTotalInc.setText(period.countMoneyStat().get("incSum").toString());
     }
 
-    public void setComboBox(ObservableList<Plan> observableList) {
+    public void setComboBox(ArrayList<Plan> plans) {
+        ObservableList<Plan> observableList = FXCollections.observableList(plans);
         fxCurrentPlan.setItems(observableList);
         if (!transitionDetected) {
             fxCurrentPlan.getSelectionModel().selectFirst();
@@ -191,7 +192,6 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
 
     public void onTest(){
         Period p = fxListViewPeriods.getSelectionModel().getSelectedItem();
-        System.out.println(p.countOperation());
     }
 
     public ListView<Period> getFxListViewPeriods() {

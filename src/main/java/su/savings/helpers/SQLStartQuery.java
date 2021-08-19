@@ -49,7 +49,6 @@ public abstract class SQLStartQuery {
             	END_SUM BIGINT,
             	EXP_ON_DEY BIGINT not null,
             	PERIOD_DAYS BIGINT not null,
-            	PLAN_DAYS BIGINT not null,
             	PAST_DAYS BIGINT not null,
             	PLAN_ID BIGINT not null,
             	constraint ALL_PERIODS_ALL_PLANS_ID_fk

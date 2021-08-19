@@ -1,6 +1,5 @@
 package su.savings.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -11,16 +10,13 @@ import javafx.scene.layout.AnchorPane;
 import su.savings.controllers.tabs.TabDaysController;
 import su.savings.controllers.tabs.TabPeriodsController;
 import su.savings.controllers.tabs.TabPlansController;
-import su.savings.dto.PlansDTO;
-import su.savings.dto.actionModels.Period;
-import su.savings.dto.actionModels.Plan;
+import su.savings.oae.Period;
+import su.savings.oae.Plan;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 

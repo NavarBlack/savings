@@ -10,10 +10,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import su.nevar.controls.NumberField;
-import su.savings.dto.actionModels.Plan;
+import su.savings.oae.Plan;
 import su.savings.controllers.MainController;
 import su.savings.customFiews.NCell;
-import su.savings.db.RepositoryImpl;
+import su.savings.db.Repository;
 import su.savings.helpers.Utils;
 
 import java.net.URL;
@@ -35,7 +35,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     }
 
     private Plan plans = new Plan();
-    private final RepositoryImpl repository = new RepositoryImpl();
 
     @FXML
     private TextField fxPlaneName;
@@ -57,8 +56,7 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        List<Plan> planList = repository.getAllPlans();
+        List<Plan> planList = Repository.getAllPlans();
         if (!planList.isEmpty()) {
             plans = planList.get(0);
             fxAllPlans.getItems().setAll(planList);
@@ -121,8 +119,8 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
     public void savePlan() {
         if (validForm()) {
             if (checkContainsPlan()) {
-                Plan newPlan = Utils.filPlan(new Plan(), this);
-                newPlan.setId(repository.savePlan(Utils.filPlan(new Plan(), this)));
+                Plan newPlan = new Plan().masSet(this);
+                newPlan.setId(Repository.savePlan(newPlan));
                 fxAllPlans.getItems().add(newPlan);
                 mainController.getTabPeriodsController().getFxCurrentPlan().setItems(fxAllPlans.getItems());
                 mainController.getTabPeriods().setDisable(false);
@@ -133,7 +131,7 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                         .filter(Plan -> Plan.getPlaneName().equals(fxPlaneName.getText()))
                         .findFirst().orElse(null);
                 assert oldPlan != null;
-                Plan newPlan = Utils.filPlan(oldPlan, this);
+                Plan newPlan = oldPlan.masSet(this);
                 fxAllPlans.getItems().set(fxAllPlans.getItems().indexOf(oldPlan), newPlan);
                 updatePlan(newPlan);
                 mainController.getTabPeriods().setDisable(false);
@@ -171,7 +169,7 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
 
     @Override
     public void onDeletePlan(Plan plan){
-        if(!Objects.isNull(plan))repository.deletePlan(plan);
+        if(!Objects.isNull(plan)) Repository.deletePlan(plan);
     }
 
     public MainController getMainController() {
@@ -180,10 +178,6 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
 
     public Plan getPlans() {
         return plans;
-    }
-
-    public RepositoryImpl getRepository() {
-        return repository;
     }
 
     public TextField getFxPlaneName() {

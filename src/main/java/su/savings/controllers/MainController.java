@@ -75,7 +75,7 @@ public class MainController implements Initializable {
 
     @FXML
     public void onSavePlan (){
-        tabPlansController.updatePlan(tabPeriodsController.getFxCurrentPlan().getValue());
+        tabPeriodsController.getFxCurrentPlan().getValue().update();
     }
     @FXML
     public void setLockPeriod(){

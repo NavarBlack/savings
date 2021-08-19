@@ -51,19 +51,19 @@ public class Repository {
     }
 
 
-    public static Long savePlan(Plan plansDTO) {
+    public static Long savePlan(Plan plan) {
         try {
             Long id = database.executeUpdate("""
                             insert into ALL_PLANS (PLAN_NAME, START_PLAN, END_PLAN, START_SUM, PLAN_DAYS) values ( ?,?,?,?,? );
                             """,
-                    stringParam(plansDTO.getPlaneName()),
-                    dateParam(plansDTO.getStartPlane()),
-                    dateParam(plansDTO.getEndPlane()),
-                    longParam(plansDTO.getStartSum()),
-                    longParam(plansDTO.getPlanDays())
+                    stringParam(plan.getPlaneName()),
+                    dateParam(plan.getStartPlane()),
+                    dateParam(plan.getEndPlane()),
+                    longParam(plan.getStartSum()),
+                    longParam(plan.getPlanDays())
             );
-            plansDTO.getKeyPoints().forEach(localDate -> saveOrUpdatePlanKeyPoint(localDate, id));
-            plansDTO.getPeriods().forEach(periodDTO -> saveOrUpdatePeriodPlan(periodDTO, id, plansDTO.preliminaryExpOnDey(), periodDTO.getPlanDays()));
+            plan.getKeyPoints().forEach(localDate -> saveOrUpdatePlanKeyPoint(localDate, id));
+            plan.getPeriods().forEach(periodDTO -> saveOrUpdatePeriodPlan(periodDTO, id, plan.preliminaryExpOnDey()));
             return id;
         } catch (SQLException ex) {
             ex.forEach(System.out::println);
@@ -87,7 +87,7 @@ public class Repository {
     }
 
 
-    public static void saveOrUpdatePeriodPlan(Period period, Long idPlan, Long expOnDey, Long planDays) {
+    public static void saveOrUpdatePeriodPlan(Period period, Long idPlan, Long expOnDey) {
         try {
             Long idPeriod = database.executeUpdate("""
                             insert into ALL_PERIODS (
@@ -97,10 +97,9 @@ public class Repository {
                              END_SUM,
                              EXP_ON_DEY,
                              PERIOD_DAYS,
-                             PLAN_DAYS,
                              PAST_DAYS,
                              PLAN_ID
-                             ) VALUES (?,?,?,?,?,?,?,?,?)
+                             ) VALUES (?,?,?,?,?,?,?,?)
                             """,
                     dateParam(period.getStartPeriod()),
                     dateParam(period.getEndPeriod()),
@@ -108,7 +107,6 @@ public class Repository {
                     longParam(period.getEndSum()),
                     longParam(expOnDey),
                     longParam(period.getPeriodDays()),
-                    longParam(planDays),
                     longParam(period.getPastDaysOnPlan()),
                     longParam(idPlan)
             );
@@ -174,7 +172,7 @@ public class Repository {
             database.executeUpdate("delete from KEY_POINTS where PLAN_ID = ?; ", longParam(idPlan));
             plan.getKeyPoints().forEach(localDate -> saveOrUpdatePlanKeyPoint(localDate, idPlan));
             database.executeUpdate("delete from ALL_PERIODS where PLAN_ID = ?; ", longParam(idPlan));
-            plan.getPeriods().forEach(p -> saveOrUpdatePeriodPlan(p, idPlan, plan.preliminaryExpOnDey(), p.getPlanDays()));
+            plan.getPeriods().forEach(p -> saveOrUpdatePeriodPlan(p, idPlan, plan.preliminaryExpOnDey()));
         } catch (SQLException ex) {
             ex.forEach(System.out::println);
         }

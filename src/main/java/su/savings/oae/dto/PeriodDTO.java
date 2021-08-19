@@ -1,7 +1,7 @@
-package su.savings.dto;
+package su.savings.oae.dto;
 
 import com.google.common.base.MoreObjects;
-import su.savings.dto.actionModels.Operation;
+import su.savings.oae.Operation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ public class PeriodDTO {
     protected Long endSum;
     protected Long expOnDey;
     protected Long periodDays;
-    protected Long planDays;
     protected Long pastDaysOnPlan;
     protected ArrayList<Operation> operations = new ArrayList<>();
     protected Long planId;
@@ -101,15 +100,6 @@ public class PeriodDTO {
         return this;
     }
 
-    public Long getPlanDays() {
-        return planDays;
-    }
-
-    public PeriodDTO setPlanDays(Long planDays) {
-        this.planDays = planDays;
-        return this;
-    }
-
     public Boolean getFinalSing() {
         return finalSing;
     }
@@ -138,7 +128,6 @@ public class PeriodDTO {
                 .add("endSum", endSum)
                 .add("expOnDey", expOnDey)
                 .add("periodDays", periodDays)
-                .add("planDays", planDays)
                 .add("pasDaysOnPlan", pastDaysOnPlan)
                 .add("operations", operations)
                 .add("planId", planId)

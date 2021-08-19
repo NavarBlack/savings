@@ -135,9 +135,9 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
             if (!fxOperationsSum.getText().equals("")) {
                 Operation operation = new Operation();
                 if (!fxOperationsName.getText().equals("")) operation.setName(fxOperationsName.getText());
-                operation.setPeriodId(period.getId());
-                operation.setSum(getLongToString(fxOperationsSum.getText()));
-                operation.setExpType(fxExpType.isSelected());
+                operation.setPeriodId(period.getId())
+                .setSum(getLongToString(fxOperationsSum.getText()))
+                .setExpType(fxExpType.isSelected());
                 fxListViewOperations.getItems().add(operation);
             }
             period.setOperations(new ArrayList<>(fxListViewOperations.getItems()));
@@ -160,10 +160,8 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
     private void upDatePlanPeriodOperation(Period newPeriod) {
         ListView<Plan> PlanListView = mainController.getTabPlansController().getFxAllPlans();
         Plan oldPlan = PlanListView.getItems().get(PlanListView.getItems().indexOf(fxCurrentPlan.getValue()));
-        Period oldPeriod = oldPlan.getPeriods().stream().filter(op -> op.getStartPeriod() == newPeriod.getStartPeriod()).findFirst().orElse(null);
-        Plan newPlan = updatePlanOnForm(oldPlan, oldPeriod, newPeriod);
-        replacementObj(PlanListView, oldPlan, newPlan);
-        replacementObj(fxCurrentPlan, oldPlan, newPlan);
+        replacementObj(PlanListView, oldPlan, oldPlan.recalculationPeriods(newPeriod));
+        replacementObj(fxCurrentPlan, oldPlan, oldPlan.recalculationPeriods(newPeriod));
         fxListViewPeriods.getItems().setAll(fxCurrentPlan.getValue().getPeriods());
         fxListViewPeriods.getSelectionModel().select(newPeriod);
     }

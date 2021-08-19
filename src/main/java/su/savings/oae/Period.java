@@ -42,7 +42,7 @@ public class Period extends PeriodDTO {
         return ChronoUnit.DAYS.between(startPeriod, endPeriod);
     }
 
-    public Long currentExpOnDay(Long startSum) {
+    public Long currentExpOnDay(Long startSum, Long planDays) {
         return ((startSum + countMoneyStat().get("countOperation")) / (planDays - pastDaysOnPlan)) / 100 * 100;
     }
 

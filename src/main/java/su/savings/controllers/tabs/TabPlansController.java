@@ -120,9 +120,9 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
         if (validForm()) {
             if (checkContainsPlan()) {
                 Plan newPlan = new Plan().masSet(this);
-                newPlan.setId(Repository.savePlan(newPlan));
+                newPlan.save();
                 fxAllPlans.getItems().add(newPlan);
-                mainController.getTabPeriodsController().getFxCurrentPlan().setItems(fxAllPlans.getItems());
+                PeriodControl().getFxCurrentPlan().setItems(fxAllPlans.getItems());
                 mainController.getTabPeriods().setDisable(false);
             } else {
                 Plan oldPlan = fxAllPlans
@@ -133,15 +133,10 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                 assert oldPlan != null;
                 Plan newPlan = oldPlan.masSet(this);
                 fxAllPlans.getItems().set(fxAllPlans.getItems().indexOf(oldPlan), newPlan);
-                updatePlan(newPlan);
+                newPlan.update();
                 mainController.getTabPeriods().setDisable(false);
             }
         }
-    }
-
-    public void updatePlan(Plan plans) {
-    mainController.getTabPeriodsController().getFxListViewPeriods().getSelectionModel().selectFirst();
-//        repository.upDatePlan(plans);
     }
 
     private Boolean validForm() {
@@ -160,6 +155,10 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
             assert plans != null;
             return plans.getPlaneName().equals(fxPlaneName.getText());
         });
+    }
+
+    private TabPeriodsController PeriodControl(){
+       return mainController.getTabPeriodsController();
     }
 
     @Override

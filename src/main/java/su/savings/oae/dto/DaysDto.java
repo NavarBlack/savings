@@ -1,4 +1,4 @@
-package su.savings.dto;
+package su.savings.oae.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

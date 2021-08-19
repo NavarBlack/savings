@@ -1,4 +1,4 @@
-package su.savings.dto;
+package su.savings.oae.dto;
 
 import java.time.LocalDate;
 
@@ -15,40 +15,45 @@ public class OperationDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    public OperationDTO setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Long getSum() {
         return sum;
     }
 
-    public void setSum(Long sum) {
+    public OperationDTO setSum(Long sum) {
         this.sum = sum;
-    }
-
-    public Long getPeriodId() {
-        return periodId;
-    }
-
-    public void setPeriodId(Long periodId) {
-        this.periodId = periodId;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public OperationDTO setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public Long getPeriodId() {
+        return periodId;
+    }
+
+    public OperationDTO setPeriodId(Long periodId) {
+        this.periodId = periodId;
+        return this;
     }
 
     public Boolean getExpType() {
         return ExpType;
     }
 
-    public void setExpType(Boolean expType) {
+    public OperationDTO setExpType(Boolean expType) {
         ExpType = expType;
+        return this;
     }
 
     public LocalDate getNpoDate() {

@@ -1,5 +1,6 @@
 package su.savings.controllers.tabs;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import su.savings.controllers.MainController;
 
@@ -19,4 +20,9 @@ public class TabDaysController implements Initializable {
 
     }
 
+
+    public void onTest(ActionEvent actionEvent) {
+
+
+    }
 }

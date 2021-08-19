@@ -1,6 +1,6 @@
-package su.savings.dto;
+package su.savings.oae.dto;
 
-import su.savings.dto.actionModels.Period;
+import su.savings.oae.Period;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

@@ -84,7 +84,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" text="Добавить" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" text="Проверка" GridPane.rowIndex="1" onAction="#onTest" />
                   <Button mnemonicParsing="false" text="Удалиь" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3">
                      <children>

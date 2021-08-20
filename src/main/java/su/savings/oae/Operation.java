@@ -18,7 +18,7 @@ public class Operation extends OperationDTO {
             .setSum(rs.getLong("SUM"))
             .setPeriodId(rs.getLong("PERIOD_ID"))
             .setExpType(rs.getBoolean("EXP_TYPE"))
-            .setNpoDate(Instant.ofEpochMilli(rs.getDate("NPO_DATE").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
+//            .setNpoDate(Instant.ofEpochMilli(rs.getDate("NPO_DATE").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
             .setNpoType(rs.getBoolean("NPO_TYPE"));
             return operation;
 
@@ -27,8 +27,8 @@ public class Operation extends OperationDTO {
         }
     }
 
-    public static ArrayList<Operation> getBdOperation(Long periodId){
-        return new ArrayList<>(Repository.getOperation(periodId)) ;
+    public static ArrayList<Operation> getBdOperation(Long id, boolean flag){
+        return new ArrayList<>(Repository.getOperation(id, flag)) ;
     }
 
 }

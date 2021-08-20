@@ -12,7 +12,7 @@ import javafx.scene.text.Text;
 import su.nevar.controls.NumberField;
 import su.savings.oae.Plan;
 import su.savings.controllers.MainController;
-import su.savings.customFiews.NCell;
+import su.savings.customFiews.NCellPlan;
 import su.savings.db.Repository;
 import su.savings.helpers.Utils;
 
@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 
 
 
-public class TabPlansController implements Initializable, NCell.ChangeForm {
+public class TabPlansController implements Initializable {
 
     private MainController mainController;
 
@@ -70,7 +70,9 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
                     }
                 }
         );
-        fxAllPlans.setCellFactory(param -> new NCell(this));
+        fxAllPlans.setCellFactory(param -> new NCellPlan(this::onChangeForm, this::onDeletePlan));
+
+//        fxAllPlans.setCellFactory(param -> new NCell(this));
         setDataForm(plans);
         addListener();
     }
@@ -161,13 +163,12 @@ public class TabPlansController implements Initializable, NCell.ChangeForm {
        return mainController.getTabPeriodsController();
     }
 
-    @Override
-    public void onChangeForm(Plan plans) {
+
+    private void onChangeForm(Plan plans) {
         setDataForm(plans);
     }
 
-    @Override
-    public void onDeletePlan(Plan plan){
+    private void onDeletePlan(Plan plan){
         if(!Objects.isNull(plan)) Repository.deletePlan(plan);
     }
 

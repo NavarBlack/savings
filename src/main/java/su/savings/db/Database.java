@@ -24,10 +24,11 @@ public class Database {
             stm.execute(SQLStartQuery.createAllPlansTable);
             stm.execute(SQLStartQuery.createKeyPointsTable);
             stm.execute(SQLStartQuery.createAllPeriods);
+            stm.execute(SQLStartQuery.createDays);
             stm.execute(SQLStartQuery.createOperations);
             this.connection = connection;
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -39,7 +40,7 @@ public class Database {
         return DatabaseSing.HOLDER_INSTANCE;
     }
 
-    public <T> Stream<T> executeSelectQuery(String sql, Function<ResultSet, T> mapper, QueryParam ...params) {
+    public <T> Stream<T> executeSelectQuery(String sql, Function<ResultSet, T> mapper, QueryParam ...params) throws SQLException {
 
         try (
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -56,9 +57,9 @@ public class Database {
 
             return result.stream();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
-            throw new RuntimeException("executeSelectQuery", e);
+            throw new SQLException(e);
         }
     }
 

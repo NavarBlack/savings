@@ -83,6 +83,7 @@ public class MainController implements Initializable {
         if(Objects.nonNull(periods)){
             for(Period period : periods){
                 period.setFinalSing(!period.getFinalSing());
+                period.update();
             }
             tabPeriodsController.getFxListViewPeriods().getItems().setAll(periods);
         }

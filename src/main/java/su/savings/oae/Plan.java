@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Plan extends PlansDTO {
+public class Plan extends PlansDTO{
 
     private Boolean checkFinalSing(){
         return periods.stream().noneMatch(period -> {
@@ -137,7 +137,7 @@ public class Plan extends PlansDTO {
                     .setEndPlane(Instant.ofEpochMilli(rs.getDate("END_PLAN").getTime()).atZone(ZoneId.systemDefault()).toLocalDate())
                     .setStartSum(rs.getLong("START_SUM"))
                     .setPlanDays(rs.getLong("PLAN_DAYS"))
-                    .setKeyPoints(Converter.stringToArrayList(rs.getString("KEY_POINTS")))
+                    .setKeyPoints(Converter.stringToArrayList(rs.getString("POINTS")))
                     .setPeriods(Period.getBdOperation(rs.getLong("id")));
             return plan;
 

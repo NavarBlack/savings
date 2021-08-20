@@ -14,8 +14,8 @@ import su.savings.oae.Operation;
 import su.savings.oae.Period;
 import su.savings.oae.Plan;
 import su.savings.controllers.MainController;
-import su.savings.customFiews.NCell;
-import su.savings.customFiews.NCellNCellOperation;
+import su.savings.customFiews.NCellPlan;
+import su.savings.customFiews.NCellOperation;
 import su.savings.customFiews.NCellPeriodKeyPoint;
 
 import static su.savings.helpers.Utils.*;
@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 
-public class TabPeriodsController implements Initializable, NCellNCellOperation.ChangeForm {
+public class TabPeriodsController implements Initializable{
     private MainController mainController;
     private Boolean transitionDetected = false;
 
@@ -71,11 +71,11 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fxCurrentPlan.setCellFactory(param -> new NCell());
+        fxCurrentPlan.setCellFactory(param -> new NCellPlan());
         fxCurrentPlan.valueProperty().addListener(this::onChangeSelectCurrentPlan);
         fxListViewPeriods.setCellFactory(param -> new NCellPeriodKeyPoint());
         fxListViewPeriods.getSelectionModel().selectedItemProperty().addListener(this::onSelectPeriod);
-        fxListViewOperations.setCellFactory(param -> new NCellNCellOperation(this));
+        fxListViewOperations.setCellFactory(param -> new NCellOperation(this::onChangeForm));
         fxListViewOperations.getSelectionModel().selectedItemProperty().addListener(this::onSelectOperation);
         addOperation.setDisable(true);
         remoteOperation.setDisable(true);
@@ -167,9 +167,8 @@ public class TabPeriodsController implements Initializable, NCellNCellOperation.
     }
 
 
-    @Override
-    public void onChangeForm(Operation Plan) {
-
+    private void onChangeForm(Operation Plan) {
+        System.out.println(Plan);
     }
 
     public ComboBox<Plan> getFxCurrentPlan() {

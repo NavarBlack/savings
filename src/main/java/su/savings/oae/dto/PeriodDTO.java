@@ -1,6 +1,7 @@
 package su.savings.oae.dto;
 
 import com.google.common.base.MoreObjects;
+import su.savings.oae.Days;
 import su.savings.oae.Operation;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public class PeriodDTO {
     protected Long periodDays;
     protected Long pastDaysOnPlan;
     protected ArrayList<Operation> operations = new ArrayList<>();
+    protected ArrayList<Days> days = new ArrayList<>();
     protected Long planId;
     protected Boolean finalSing = false;
 
@@ -118,6 +120,15 @@ public class PeriodDTO {
         return this;
     }
 
+    public ArrayList<Days> getDays() {
+        return days;
+    }
+
+    public PeriodDTO setDays(ArrayList<Days> days) {
+        this.days = days;
+        return this;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -128,8 +139,9 @@ public class PeriodDTO {
                 .add("endSum", endSum)
                 .add("expOnDey", expOnDey)
                 .add("periodDays", periodDays)
-                .add("pasDaysOnPlan", pastDaysOnPlan)
+                .add("pastDaysOnPlan", pastDaysOnPlan)
                 .add("operations", operations)
+                .add("days", days)
                 .add("planId", planId)
                 .add("finalSing", finalSing)
                 .toString();

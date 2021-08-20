@@ -11,7 +11,7 @@ import su.savings.oae.Period;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-public class NCellPeriodKeyPoint extends ListCell<Period> {
+public class NCellPeriodKeyPoint extends BaseCell<Period> {
 
     @FXML private Text start;
     @FXML private Text end;
@@ -20,29 +20,11 @@ public class NCellPeriodKeyPoint extends ListCell<Period> {
     @FXML private Text endSum;
     @FXML private Text expOnDey;
     @FXML private FontAwesomeIconView finalSing;
-    private ChangeForm changeForm;
 
-    public NCellPeriodKeyPoint(ChangeForm changeForm){
-        this.changeForm = changeForm;
-    }
+
 
     public NCellPeriodKeyPoint(){
-       loadFXML();
-    }
-
-    public interface ChangeForm{
-        void onChangeForm(Period plansDTO);
-    }
-
-    private void loadFXML() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../views/custom/NCellPeriodKeyPoint.fxml"));
-            loader.setController(this);
-            loader.setRoot(this);
-            loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+       loadFXML("NCellPeriodKeyPoint");
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Period extends PeriodDTO {
 
@@ -69,7 +70,8 @@ public class Period extends PeriodDTO {
                     .setExpOnDey(rs.getLong("EXP_ON_DEY"))
                     .setPlanId(rs.getLong("PLAN_ID"))
                     .setPastDaysOnPlan(rs.getLong("PAST_DAYS"))
-                    .setOperations(Operation.getBdOperation(rs.getLong("id")));
+                    .setOperations(Operation.getBdOperation(rs.getLong("id"), true))
+                    .setDays(Days.getBdDays(rs.getLong("id")));
             return newPeriod;
 
         } catch (Exception e) {
@@ -77,6 +79,20 @@ public class Period extends PeriodDTO {
         }
     }
 
+    public void createDays(){
+        Stream.iterate(startPeriod, date -> date.plusDays(1) )
+                .limit(ChronoUnit.DAYS.between(startPeriod,endPeriod))
+                .forEach(date -> {
+                    Days day = new Days();
+                    day.setDate(date).setExpDay(expOnDey).setPeriodId(id);
+                    days.add(day);
+                });
+
+    }
+
+    public void update(){
+        Repository.upDatePeriod(this);
+    }
 
     public static ArrayList<Period> getBdOperation (Long planId){
 
